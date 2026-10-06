@@ -1,9 +1,6 @@
 package com.example.reservation;
 
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 
 public record Reservation(
         Long id,
@@ -12,6 +9,4 @@ public record Reservation(
         LocalDate startDate,
         LocalDate endDate,
         ReservationStatus status
-) {
-
-}
+) {}
