@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/reservation")
@@ -25,13 +24,8 @@ public class ReservationController {
     public ResponseEntity<Reservation> getReservationByID(@PathVariable("id") Long id){
         log.info("Called getReservationByID with id=" + id);
 
-        try{
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(reservationService.getReservationByID(id));
-
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(reservationService.getReservationByID(id));
     }
 
     @GetMapping()
@@ -54,13 +48,9 @@ public class ReservationController {
     @DeleteMapping("/{id}/cancel")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id){
         log.info("Called deleteReservation by id={}", id);
+        reservationService.cancelReservation(id);
 
-        try{
-            reservationService.cancelReservation(id);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().build();
     }
 
 

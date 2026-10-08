@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
 
-    //List<ReservationEntity> findAllByStatusIs(ReservationStatus status);
-
     @Query("select r from ReservationEntity r where r.status = :status")
     List<ReservationEntity> findAllByStatusIs(ReservationStatus status);
 
