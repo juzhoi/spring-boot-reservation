@@ -35,12 +35,13 @@ public class ReservationService {
     }
 
     public Reservation createReservation(Reservation reservationToCreate) {
-        if(reservationToCreate.id() != null){
-            throw new IllegalArgumentException("ID should be empty");
-        }
 
         if(reservationToCreate.status() != null){
             throw new IllegalArgumentException("Reservation status should be empty");
+        }
+
+        if(!reservationToCreate.endDate().isAfter(reservationToCreate.startDate())){
+            throw new IllegalArgumentException("Start date must be one day earlier than end date");
         }
 
         var entityToSave = new ReservationEntity(
@@ -59,9 +60,18 @@ public class ReservationService {
 
     @Transactional
     public void cancelReservation(Long id) {
-        if(!reservationRepository.existsById(id)){
-            throw new EntityNotFoundException("Not found reservation by id=" + id);
+
+        var reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Not found reservation by id=" + id));
+
+        if(reservation.getStatus().equals(ReservationStatus.APPROVED)){
+            throw new IllegalStateException("Cannot cancel approved reservation. Contact with manager please");
         }
+
+        if(reservation.getStatus().equals(ReservationStatus.CANCELLED)){
+            throw new IllegalStateException("Cannot cancel the reservation. Reservation was already cancelled");
+        }
+
 
         log.info("Successfully cancelled reservation by id={}", id);
 
@@ -75,6 +85,10 @@ public class ReservationService {
 
         if(reservation.getStatus()!= ReservationStatus.PENDING){
             throw new IllegalStateException("Cannot modify reservation: status= " + reservation.getStatus());
+        }
+
+        if(!reservationToUpdate.endDate().isAfter(reservationToUpdate.startDate())){
+            throw new IllegalArgumentException("Start date must be one day earlier than end date");
         }
 
         var reservationToSave = new ReservationEntity(

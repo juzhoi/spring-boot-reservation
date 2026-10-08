@@ -1,5 +1,6 @@
 package com.example.reservation;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ReservationController {
 
 
     @PostMapping()
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservationToCreate){
+    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservationToCreate){
         log.info("Called createReservation");
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -55,7 +56,7 @@ public class ReservationController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reservation> updateReservation(@PathVariable("id") Long id, @RequestBody Reservation reservationToUpdate){
+    public ResponseEntity<Reservation> updateReservation(@PathVariable("id") Long id, @RequestBody @Valid Reservation reservationToUpdate){
         log.info("Called updateReservation by id={}, reservation={}", id, reservationToUpdate);
         var updated = reservationService.updateReservation(id, reservationToUpdate);
 
