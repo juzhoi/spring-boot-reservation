@@ -1,4 +1,4 @@
-package com.example.reservation;
+package com.example.reservation.reservations;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,10 +30,16 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> getAllReservations(){
+    public ResponseEntity<List<Reservation>> getAllReservations(
+            @RequestParam(name = "roomId", required = false) Long roomId,
+            @RequestParam(name = "userId", required = false) Long userId,
+            @RequestParam(name = "pageSize", required = false) Integer pageSize,
+            @RequestParam(name = "pageNumber", required = false) Integer pageNumber
+    ){
         log.info("Called getAllReservations");
+        var filter = new ReservationSearchFilter(roomId, userId, pageSize, pageNumber);
 
-        return ResponseEntity.ok(reservationService.findAllReservations());
+        return ResponseEntity.ok(reservationService.searchAllByFilter(filter));
     }
 
 

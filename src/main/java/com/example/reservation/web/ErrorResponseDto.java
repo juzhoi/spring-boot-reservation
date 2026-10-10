@@ -1,4 +1,4 @@
-package com.example.reservation;
+package com.example.reservation.web;
 
 import java.time.LocalDateTime;
 
