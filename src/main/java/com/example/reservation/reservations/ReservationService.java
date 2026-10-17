@@ -84,11 +84,11 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("Not found reservation by id=" + id));
 
         if(reservation.getStatus().equals(ReservationStatus.APPROVED)){
-            throw new IllegalStateException("Cannot cancel approved reservation. Contact with manager please");
+            throw new ReservationStateException("Cannot cancel approved reservation. Please contact a manager");
         }
 
         if(reservation.getStatus().equals(ReservationStatus.CANCELLED)){
-            throw new IllegalStateException("Cannot cancel the reservation. Reservation was already cancelled");
+            throw new ReservationStateException("Cannot cancel the reservation. Reservation was already cancelled");
         }
 
 
@@ -103,7 +103,7 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("Not found reservation by id=" + id));
 
         if(reservation.getStatus()!= ReservationStatus.PENDING){
-            throw new IllegalStateException("Cannot modify reservation: status= " + reservation.getStatus());
+            throw new ReservationStateException("Cannot modify reservation: status= " + reservation.getStatus());
         }
 
         if(!reservationToUpdate.endDate().isAfter(reservationToUpdate.startDate())){
@@ -125,7 +125,7 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("Not found reservation by id=" + id));
 
         if(reservation.getStatus() != ReservationStatus.PENDING){
-            throw new IllegalStateException("Cannot approve reservation: status= " + reservation.getStatus());
+            throw new ReservationStateException("Cannot approve reservation: status= " + reservation.getStatus());
         }
 
         var isAvailableToApprove = reservationAvailabilityService.isReservationAvailable(
@@ -135,7 +135,7 @@ public class ReservationService {
         );
 
         if (!isAvailableToApprove){
-            throw new IllegalStateException("Cannot approve reservation because of conflict");
+            throw new ReservationStateException("Cannot approve reservation because of conflict");
         }
 
         reservation.setStatus(ReservationStatus.APPROVED);
