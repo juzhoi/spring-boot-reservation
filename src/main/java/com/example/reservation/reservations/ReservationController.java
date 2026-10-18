@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private static final Logger log = LoggerFactory.getLogger(ReservationController.class);
@@ -52,12 +52,12 @@ public class ReservationController {
     }
 
 
-    @DeleteMapping("/{id}/cancel")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id){
-        log.info("Called deleteReservation by id={}", id);
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelReservation(@PathVariable("id") Long id){
+        log.info("Called cancelReservation by id={}", id);
         reservationService.cancelReservation(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/reservation/availability")
+@RequestMapping("/reservations/availability")
 public class ReservationAvailabilityController {
 
     private final ReservationAvailabilityService reservationAvailabilityService;
