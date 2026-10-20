@@ -6,8 +6,7 @@ Users create reservation requests, managers approve them, and the system prevent
 ## Tech Stack
 
 - **Java 21**
-- **Spring Boot 4.1** (Spring Web MVC, Spring Data JPA, Bean
-Validation)
+- **Spring Boot 4.1** (Spring Web MVC, Spring Data JPA, Bean Validation)
 - **PostgreSQL** with Hibernate
 - **Maven** (wrapper included)
 
@@ -22,53 +21,53 @@ Validation)
 
 ### Business rules
 
-| Action  | Allowed when                                                   | Otherwise                                                           |
-|---------|----------------------------------------------------------------|---------------------------------------------------------------------|
-| Update  | status is PENDING                                              | 409 Conflict                                                        |
-| Approve | status is  APPROVED reservationfor the room                    | 409 Conflict                                                        |
-| Cancel  | status is pproved reservationsmust be cancelled by a manager)  | 409 Conflict (approved reservations must be cancelled by a manager) |
+| Action  | Allowed when | Otherwise |
+|---------|--------------|-----------|
+| Update  | status is `PENDING` | 409 Conflict |
+| Approve | status is `PENDING` and no overlapping `APPROVED` reservation exists for the room | 409 Conflict |
+| Cancel  | status is `PENDING` | 409 Conflict (approved reservations must be cancelled by a manager) |
 
 ## Getting Started
 
 ### Prerequisites
 
 - Java 21
-- Docker (for PostgreS
+- Docker (for PostgreSQL)
 
 ### Run
 
 1. Start PostgreSQL:
-```bash
-   docker run --name mSWORD=root -p 5432:5432 -d postgres:17
- ```
+   ```bash
+   docker run --name my-postgres -e POSTGRES_PASSWORD=root -p 5432:5432 -d postgres:17
+   ```
 2. Start the application:
- ```bash
+   ```bash
    ./mvnw spring-boot:run
-```
-4. The API is available at `http://localhost:8080`.               
-The database schema is created automatically on startup.          
-## API        
+   ```
+3. The API is available at `http://localhost:8080`.
 
-| Method | Endpoint                            | Description      
-|--------|-------------------------------------|----------------------------------------
-| GET    | `/reservations`                     | List reservations(filters: `roomId`, `uumber`) | 200 |
-| GET    | `/reservations/{id}`                | Get a reservationid
-| POST   | `/reservations`                     | Create a reservat(status is set to PEND
-| PUT    | `/reservations/{id}`                | Update a pending reservation
-| POST   | `/reservations/{id}/approve`        | Approve a pendingreservation
-| POST   | `/reservations/{id}/cancel`         | Cancel a pending reservation
-| POST   | `/reservations/availability/check`  | Check if a room is
-free for a date range
+The database schema is created automatically on startup.
 
-Pagination defaults: `0`.
+## API
 
-### Example: create a
+| Method | Endpoint | Description | Success |
+|--------|----------|-------------|---------|
+| GET  | `/reservations` | List reservations (filters: `roomId`, `userId`, `pageSize`, `pageNumber`) | 200 |
+| GET  | `/reservations/{id}` | Get a reservation by id | 200 |
+| POST | `/reservations` | Create a reservation (status is set to `PENDING`) | 201 |
+| PUT  | `/reservations/{id}` | Update a pending reservation | 200 |
+| POST | `/reservations/{id}/approve` | Approve a pending reservation | 200 |
+| POST | `/reservations/{id}/cancel` | Cancel a pending reservation | 204 |
+| POST | `/reservations/availability/check` | Check if a room is free for a date range | 200 |
+
+Pagination defaults: `pageSize=10`, `pageNumber=0`.
+
+### Example: create a reservation
 
 ```bash
 curl -X POST http://localhost:8080/reservations \
-  -H "Content-Type: ap
-  -d '{"userId": 1, "roomId": 5, "startDate": "2026-12-08", "endDate":
-"2026-12-20"}'
+  -H "Content-Type: application/json" \
+  -d '{"userId": 1, "roomId": 5, "startDate": "2026-12-08", "endDate": "2026-12-20"}'
 ```
 
 ```json
@@ -76,7 +75,7 @@ curl -X POST http://localhost:8080/reservations \
   "id": 1,
   "userId": 1,
   "roomId": 5,
-  "startDate": "2026-1
+  "startDate": "2026-12-08",
   "endDate": "2026-12-20",
   "status": "PENDING"
 }
@@ -84,41 +83,38 @@ curl -X POST http://localhost:8080/reservations \
 
 ## Error Handling
 
-All errors return the reating a reservationwith an empty body:
+All errors return the same structure. Example: creating a reservation with an empty body:
 
 ```json
 {
   "message": "Bad Request",
-  "errorDetailedMessagull; startDate: mustnot be null; endDate: must not be null; roomId: must not be null",
-  "errorTime": "2026-1
+  "errorDetailedMessage": "userId: must not be null; startDate: must not be null; endDate: must not be null; roomId: must not be null",
+  "errorTime": "2026-10-20T15:53:42.40016"
 }
 ```
 
-Internal server errorstraces or internaldetails to the client.
+Internal server errors (500) never expose stack traces or internal details to the client.
 
 ## Project Structure
 
 ```
-src/main/java/com/exam
-├── reservations/          # controller, service, repository, entity,
-mapper
+src/main/java/com/example/reservation
+├── reservations/          # controller, service, repository, entity, mapper
 │   └── availability/      # room availability check
-└── web/              ndling and error DTO
+└── web/                   # global exception handling and error DTO
 ```
 
 ## Known Limitations
 
-- **No authentication yet**: any client can approve or cancel
-reservations
-- **Race condition on approve**: two concurrent approvals for
-overlapping dates can d with database-levellocking
+- **No authentication yet**: any client can approve or cancel reservations
+- **Race condition on approve**: two concurrent approvals for overlapping dates can both succeed; will be fixed with database-level locking
 
 ## Roadmap
 
 - [ ] OpenAPI / Swagger UI documentation
-- [ ] Unit tests (JUniion tests(Testcontainers)
-- [ ] Docker Compose f
+- [ ] Unit tests (JUnit 5, Mockito) and integration tests (Testcontainers)
+- [ ] Docker Compose for one-command startup
 - [ ] Authentication and roles with Spring Security and JWT
-- [ ] Database migrati
+- [ ] Database migrations with Flyway
 - [ ] Separate request/response DTOs and paginated responses
-- [ ] CI/CD with GitHument
+- [ ] CI/CD with GitHub Actions and cloud deployment
