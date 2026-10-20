@@ -35,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleEntityNotFound(EntityNotFoundException e) {
-        log.error("Handle EntityNotFoundException", e);
+        log.warn("Handle EntityNotFoundException: {}", e.getMessage());
 
         var errorDto = new ErrorResponseDto("Entity not found", e.getMessage(), LocalDateTime.now());
 
@@ -43,9 +43,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(exception = {IllegalArgumentException.class})
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleBadRequest(Exception e) {
-        log.error("Handle BadRequest", e);
+        log.warn("Handle BadRequest: {}", e.getMessage());
 
         var errorDto = new ErrorResponseDto("Bad request", e.getMessage(), LocalDateTime.now());
 
@@ -63,13 +63,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .collect(Collectors.joining("; ")),
                 LocalDateTime.now()
         );
+        log.warn("Validation failed: {}", errorDto.errorDetailedMessage());
 
         return super.handleExceptionInternal(e, errorDto, headers, status, request);
     }
 
     @ExceptionHandler(ReservationStateException.class)
     public ResponseEntity<ErrorResponseDto> handleReservationStateException(ReservationStateException e) {
-        log.error("Handle ReservationStateException", e);
+        log.warn("Handle ReservationStateException: {}", e.getMessage());
 
         var errorDto = new ErrorResponseDto("Conflict", e.getMessage(), LocalDateTime.now());
 
@@ -78,6 +79,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected @Nullable ResponseEntity<Object> handleExceptionInternal(Exception e, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        log.warn("Handle handleExceptionInternal: {}", e.getMessage());
+
         var errorDto = new ErrorResponseDto(HttpStatus.valueOf(statusCode.value()).getReasonPhrase(), e.getMessage(), LocalDateTime.now());
 
         return super.handleExceptionInternal(e, errorDto, headers, statusCode, request);
