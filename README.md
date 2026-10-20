@@ -13,17 +13,17 @@ Validation)
 
 ## Features
 
-- **Reservation lifecytarts as `PENDING` andcan be `APPROVED` or `CANCELLED`
-- **Double-booking prean only be approved ifit doesn't overlap with another approved reservation for the same room
-- **Availability checkfree for a date rangebefore booking
-- **Filtering and pagions by room or user,with page size and page number
-- **Input validation**n the past and invaliddate ranges are rejected with clear messages
-- **Consistent error rre one JSON format with correct HTTP status codes (400, 404, 405, 409, 500)
+- **Reservation lifecycle**: every reservation starts as `PENDING` and can be `APPROVED` or `CANCELLED`
+- **Double-booking prevention**: a reservation can only be approved if it doesn't overlap with another approved reservation for the same room
+- **Availability check**: ask whether a room is free for a date range before booking
+- **Filtering and pagination**: search reservations by room or user, with page size and page number
+- **Input validation**: required fields, dates in the past and invalid date ranges are rejected with clear messages
+- **Consistent error responses**: all errors share one JSON format with correct HTTP status codes (400, 404, 405, 409, 500)
 
 ### Business rules
 
 | Action  | Allowed when                                                   | Otherwise                                                           |
-|---------|--------------------------------------------------------------------------------------------------------------------------------------|
+|---------|----------------------------------------------------------------|---------------------------------------------------------------------|
 | Update  | status is PENDING                                              | 409 Conflict                                                        |
 | Approve | status is  APPROVED reservationfor the room                    | 409 Conflict                                                        |
 | Cancel  | status is pproved reservationsmust be cancelled by a manager)  | 409 Conflict (approved reservations must be cancelled by a manager) |
