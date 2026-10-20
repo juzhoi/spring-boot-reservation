@@ -1,5 +1,6 @@
 package com.example.reservation.reservations;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@Tag(name = "Reservations", description = "Create, view, update, approve and cancel room reservations")
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
