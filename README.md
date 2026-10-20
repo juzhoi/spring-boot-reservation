@@ -22,11 +22,11 @@ Validation)
 
 ### Business rules
 
-| Action  | Allowed when       | Otherwise      |
-|---------|-----------|
-| Update  | status is PENDING  | 409 Conflict   |
-| Approve | status is  APPROVED reservationfor the room | 409 Conflict |
-| Cancel  | status is pproved reservationsmust be cancelled by a manager) |
+| Action  | Allowed when                                                   | Otherwise                                                           |
+|---------|--------------------------------------------------------------------------------------------------------------------------------------|
+| Update  | status is PENDING                                              | 409 Conflict                                                        |
+| Approve | status is  APPROVED reservationfor the room                    | 409 Conflict                                                        |
+| Cancel  | status is pproved reservationsmust be cancelled by a manager)  | 409 Conflict (approved reservations must be cancelled by a manager) |
 
 ## Getting Started
 
