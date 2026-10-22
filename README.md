@@ -8,6 +8,7 @@ Users create reservation requests, managers approve them, and the system prevent
 - **Java 21**
 - **Spring Boot 4.1** (Spring Web MVC, Spring Data JPA, Bean Validation)
 - **PostgreSQL** with Hibernate
+- **springdoc-openapi** (Swagger UI)
 - **Maven** (wrapper included)
 
 ## Features
@@ -45,10 +46,13 @@ Users create reservation requests, managers approve them, and the system prevent
    ./mvnw spring-boot:run
    ```
 3. The API is available at `http://localhost:8080`.
+4. Interactive API docs: `http://localhost:8080/swagger-ui.html`.
 
 The database schema is created automatically on startup.
 
+
 ## API
+Full interactive documentation with request/response schemas is available in Swagger UI (see [Run](#run)).
 
 | Method | Endpoint | Description | Success |
 |--------|----------|-------------|---------|
@@ -111,7 +115,7 @@ src/main/java/com/example/reservation
 
 ## Roadmap
 
-- [ ] OpenAPI / Swagger UI documentation
+- [x] OpenAPI / Swagger UI documentation
 - [ ] Unit tests (JUnit 5, Mockito) and integration tests (Testcontainers)
 - [ ] Docker Compose for one-command startup
 - [ ] Authentication and roles with Spring Security and JWT
