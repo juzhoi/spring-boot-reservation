@@ -1,5 +1,11 @@
 package com.example.reservation.reservations.availability;
 
+import com.example.reservation.web.ErrorResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -24,8 +30,16 @@ public class ReservationAvailabilityController {
 
     private static final Logger log = LoggerFactory.getLogger(ReservationAvailabilityController.class);
 
-
-
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Availability status returned"),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @Operation(
+            summary = "Check room availability",
+            description = "Returns AVAILABLE if no approved reservation "
+                    + "overlaps the given date range, otherwise RESERVED."
+    )
     @PostMapping("/check")
     public ResponseEntity<CheckAvailabilityResponse> checkAvailability(
             @RequestBody @Valid CheckAvailabilityRequest request
