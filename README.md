@@ -33,23 +33,30 @@ Users create reservation requests, managers approve them, and the system prevent
 
 ### Prerequisites
 
-- Java 21
-- Docker (for PostgreSQL)
+- Docker
 
 ### Run
 
-1. Start PostgreSQL:
+1. Create a `.env` file from the template and set a password:
    ```bash
-   docker run --name my-postgres -e POSTGRES_PASSWORD=root -p 5432:5432 -d postgres:17
+   cp .env.example .env
    ```
-2. Start the application:
+2. Start the database and the application:
    ```bash
-   ./mvnw spring-boot:run
+   docker compose up -d --build
    ```
 3. The API is available at `http://localhost:8080`.
-4. Interactive API docs: `http://localhost:8080/swagger-ui.html`.
+4. Interactive API docs: `http://localhost:8080/swagger-ui.html`
 
 The database schema is created automatically on startup.
+
+### Run locally from the IDE
+
+Requires Java 21. Start only the database, then run `ReservationSystemApplication`
+with the `POSTGRES_PASSWORD` environment variable set:
+```bash
+docker compose up -d db
+```
 
 ### Tests
 
@@ -125,7 +132,7 @@ src/main/java/com/example/reservation
 
 - [x] OpenAPI / Swagger UI documentation
 - [x] Unit tests (JUnit 5, Mockito) and integration tests (Testcontainers)
-- [ ] Docker Compose for one-command startup
+- [x] Docker Compose for one-command startup
 - [ ] Authentication and roles with Spring Security and JWT
 - [ ] Database migrations with Flyway
 - [ ] Separate request/response DTOs and paginated responses
