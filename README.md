@@ -10,6 +10,7 @@ Users create reservation requests, managers approve them, and the system prevent
 - **PostgreSQL** with Hibernate
 - **springdoc-openapi** (Swagger UI)
 - **Maven** (wrapper included)
+- **JUnit 5**, **Mockito**, **MockMvc**, **Testcontainers** for testing
 
 ## Features
 
@@ -50,6 +51,13 @@ Users create reservation requests, managers approve them, and the system prevent
 
 The database schema is created automatically on startup.
 
+### Tests
+
+```bash
+./mvnw test
+```
+
+Integration tests start PostgreSQL automatically with Testcontainers, so only Docker needs to be running.
 
 ## API
 Full interactive documentation with request/response schemas is available in Swagger UI (see [Run](#run)).
@@ -116,7 +124,7 @@ src/main/java/com/example/reservation
 ## Roadmap
 
 - [x] OpenAPI / Swagger UI documentation
-- [ ] Unit tests (JUnit 5, Mockito) and integration tests (Testcontainers)
+- [x] Unit tests (JUnit 5, Mockito) and integration tests (Testcontainers)
 - [ ] Docker Compose for one-command startup
 - [ ] Authentication and roles with Spring Security and JWT
 - [ ] Database migrations with Flyway
