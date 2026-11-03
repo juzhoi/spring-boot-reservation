@@ -1,6 +1,7 @@
 package com.example.reservation.web;
 
 import com.example.reservation.reservations.ReservationStateException;
+import com.example.reservation.users.UsernameAlreadyTakenException;
 import jakarta.persistence.EntityNotFoundException;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -57,9 +58,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(e, errorDto, headers, status, request);
     }
 
-    @ExceptionHandler(ReservationStateException.class)
-    public ResponseEntity<ErrorResponseDto> handleReservationStateException(ReservationStateException e) {
-        log.warn("Handle ReservationStateException: {}", e.getMessage());
+    @ExceptionHandler(exception = {ReservationStateException.class, UsernameAlreadyTakenException.class})
+    public ResponseEntity<ErrorResponseDto> handleConflict(RuntimeException e) {
+        log.warn("Handle Conflict: {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildErrorDto(HttpStatus.CONFLICT, e.getMessage()));
     }
