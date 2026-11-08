@@ -6,8 +6,4 @@ public record ErrorResponseDto (
         String message,
         String errorDetailedMessage,
         LocalDateTime errorTime
-){
-
-}
-
-
+){}
