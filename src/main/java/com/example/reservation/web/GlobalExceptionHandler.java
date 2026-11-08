@@ -10,11 +10,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("Handle EntityNotFoundException: {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(buildErrorDto(HttpStatus.NOT_FOUND, e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseDto> handleUnauthenticated(AuthenticationException e) {
+        log.warn("Handle Unauthenticated: {}", e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(buildErrorDto(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
